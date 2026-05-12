@@ -46,6 +46,12 @@ body {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+[data-bs-theme="dark"] .chat-header {
+  background-color: #1e281f; /* Verde muy oscuro para el modo oscuro */
+  border-bottom: 1px solid #2e3b32;
 }
 
 /* Contenedor de mensajes */
@@ -99,6 +105,10 @@ body {
 
 [data-bs-theme="dark"] .message-sent {
   background-color: var(--bubble-own-dark);
+}
+
+[data-bs-theme="dark"] .message-sent .timestamp {
+    color: #dbdbdb;
 }
 
 .message-received {

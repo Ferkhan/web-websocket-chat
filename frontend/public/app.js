@@ -11,19 +11,35 @@ const messages = document.getElementById('messages');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
 const statusDiv = document.getElementById('status');
-const themeToggle = document.getElementById('themeToggle');
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+const themeIcon = document.getElementById('themeIcon');
+const chatTitle = document.getElementById('chatTitle');
+
+function updateThemeIcon(theme) {
+    if (theme === 'dark') {
+        themeIcon.className = 'bi bi-sun-fill';
+        themeIcon.style.color = '#81c784'; // Amarillo/dorado para contraste en oscuro
+        themeToggleBtn.classList.replace('btn-light', 'btn-dark');
+    } else {
+        themeIcon.className = 'bi bi-moon-fill';
+        themeIcon.style.color = 'var(--primary-color)';
+        themeToggleBtn.classList.replace('btn-dark', 'btn-light');
+    }
+}
 
 // Inicializar el tema
 function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-bs-theme', savedTheme);
-    themeToggle.checked = savedTheme === 'dark';
+    updateThemeIcon(savedTheme);
 }
 
-themeToggle.addEventListener('change', () => {
-    const newTheme = themeToggle.checked ? 'dark' : 'light';
+themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-bs-theme', newTheme);
     localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
 });
 
 // Login y mostrar chat
@@ -36,6 +52,11 @@ loginBtn.addEventListener('click', () => {
     }
     
     currentUser = username;
+    chatTitle.textContent = currentUser;
+    const userAvatar = document.getElementById('userAvatar');
+    // Generar un avatar basado en el nombre de usuario usando ui-avatars, combinando con los colores de la app
+    userAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser)}&background=4caf50&color=fff&rounded=true&bold=true`;
+    userAvatar.style.display = 'block';
     
     // Cambiar pantallas
     loginScreen.style.display = 'none';

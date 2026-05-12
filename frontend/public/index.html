@@ -1,180 +1,64 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="es" data-bs-theme="light">
 <head>
-       
     <meta charset="UTF-8">
-       
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>EPN FIS Chat WebSocket</title>
-        <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            max-width: 800px;
-        }
-
-        #messages {
-            border: 1px solid #ccc;
-            height: 300px;
-            overflow-y: auto;
-            padding: 10px;
-            margin: 10px 0;
-            background: #f9f9f9;
-        }
-
-        .message {
-            margin: 5px 0;
-            padding: 5px;
-            background: white;
-            border-radius: 3px;
-        }
-
-        .username {
-            font-weight: bold;
-            color: #0066cc;
-        }
-
-        .timestamp {
-            font-size: 12px;
-            color: #666;
-            float: right;
-        }
-
-        input,
-        button {
-            padding: 8px;
-            margin: 5px;
-        }
-
-        #messageInput {
-            width: 70%;
-        }
-
-        #sendBtn {
-            width: 20%;
-        }
-
-        #usernameInput {
-            width: 200px;
-        }
-    </style>
+    <title>EPN FIS Chat WebSocket</title>
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-        <h1>Chat WebSocket</h1>
-       
-        <div>
-                <label>Usuario: </label>
-                <input type="text" id="usernameInput" placeholder="Ingresa tu nombre" maxlength="20">
-            </div>
-       
-        <div id="messages"></div>
-       
-        <div>
-                <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." maxlength="500">
-                <button id="sendBtn">Enviar</button>
-            </div>
-       
-        <div id="status" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
 
-       
-    <script>
-        let ws;
-        let connected = false;
+    <!-- Pantalla de Login -->
+    <div id="login-screen">
+        <div class="card login-card p-4 text-center">
+            <h2 class="mb-4" style="color: var(--primary-color);">EPN FIS Chat</h2>
+            <div class="mb-3">
+                <label for="usernameInput" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="usernameInput" placeholder="Ingresa tu nombre" maxlength="20">
+            </div>
+            <button id="loginBtn" class="btn btn-epn w-100">Entrar al Chat</button>
+        </div>
+    </div>
 
-        const messages = document.getElementById('messages');
-        const messageInput = document.getElementById('messageInput');
-        const usernameInput = document.getElementById('usernameInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const status = document.getElementById('status');
+    <!-- Pantalla de Chat -->
+    <div id="chat-screen">
+        <!-- Header del Chat -->
+        <div class="chat-header">
+            <h4 class="m-0">FIS Web Chat</h4>
+            
+            <div class="d-flex align-items-center gap-3">
+                <!-- Estado de conexión -->
+                <span id="status" class="badge bg-secondary">Conectando...</span>
+                
+                <!-- Toggle Claro/Oscuro -->
+                <div class="form-check form-switch m-0">
+                    <input class="form-check-input" type="checkbox" role="switch" id="themeToggle">
+                    <label class="form-check-label text-white" for="themeToggle">Oscuro</label>
+                </div>
+            </div>
+        </div>
 
-        function connect() {
-            const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            ws = new WebSocket(`${protocol}//localhost:3000`);
+        <!-- Contenedor de Mensajes -->
+        <div id="messages">
+            <!-- Los mensajes se agregarán aquí dinámicamente -->
+        </div>
 
-            ws.onopen = () => {
-                connected = true;
-                status.textContent = 'Conectado';
-                status.style.color = 'green';
-                sendBtn.disabled = false;
-            };
+        <!-- Área de Input -->
+        <div class="chat-input-area">
+            <input type="text" id="messageInput" class="form-control" placeholder="Escribe tu mensaje..." maxlength="500">
+            <button id="sendBtn" class="btn btn-epn px-4">Enviar</button>
+        </div>
+    </div>
 
-            ws.onmessage = (event) => {
-                const msg = JSON.parse(event.data);
-                addMessage(msg.username, msg.text, msg.timestamp);
-            };
-
-            ws.onclose = () => {
-                connected = false;
-                status.textContent = 'Desconectado - Intentando reconectar...';
-                status.style.color = 'red';
-                sendBtn.disabled = true;
-                setTimeout(connect, 3000);
-            };
-
-            ws.onerror = (error) => {
-                console.error('Error WebSocket:', error);
-            };
-        }
-
-        function addMessage(username, text, timestamp) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'message';
-            msgDiv.innerHTML = `
-                <span class="username">${username}:</span> 
-                ${text}
-                <span class="timestamp">${timestamp}</span>
-            `;
-            messages.appendChild(msgDiv);
-            messages.scrollTop = messages.scrollHeight;
-        }
-
-        function sendMessage() {
-            const username = usernameInput.value.trim();
-            const text = messageInput.value.trim();
-
-            if (!username) {
-                alert('Por favor ingresa tu nombre de usuario');
-                usernameInput.focus();
-                return;
-            }
-
-            if (!text) {
-                messageInput.focus();
-                return;
-            }
-
-            if (!connected) {
-                alert('No hay conexión al servidor');
-                return;
-            }
-
-            ws.send(JSON.stringify({ username, text }));
-            messageInput.value = '';
-        }
-
-        // Event listeners
-        sendBtn.addEventListener('click', sendMessage);
-
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        usernameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                messageInput.focus();
-            }
-        });
-
-        // Inicializar conexión
-        connect();
-
-        // Focus inicial
-        usernameInput.focus();
-    </script>
+    <!-- Bootstrap 5 JS Bundle CDN (opcional para interactividad de Bootstrap si fuera necesaria, pero buena práctica) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmxc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <!-- Custom JS -->
+    <script src="app.js"></script>
 </body>
-
 </html>

@@ -18,18 +18,68 @@
 
     <!-- Pantalla de Login -->
     <div id="login-screen">
-        <div class="card login-card p-4 text-center">
+        <div class="card login-card p-4 text-center" style="max-width: 400px; width: 100%;">
             <h2 class="mb-4" style="color: var(--primary-color);">EPN FIS Chat</h2>
-            <div class="mb-3">
-                <label for="usernameInput" class="form-label">Usuario</label>
-                <input type="text" class="form-control" id="usernameInput" placeholder="Ingresa tu nombre" maxlength="20">
+            
+            <div id="auth-error" class="alert alert-danger" style="display: none;"></div>
+
+            <!-- Contenedor de Iniciar Sesión -->
+            <div id="login-form-container">
+                <div class="mb-3 text-start">
+                    <label for="loginEmailInput" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="loginEmailInput" placeholder="tu@correo.com">
+                </div>
+                
+                <div class="mb-3 text-start">
+                    <label for="loginPasswordInput" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="loginPasswordInput" placeholder="******">
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                    <button id="loginBtn" class="btn btn-epn">Iniciar Sesión</button>
+                </div>
+
+                <div class="text-center mb-3">
+                    <a href="#" id="showRegisterLink" class="text-decoration-none" style="color: var(--primary-color);">¿No tienes cuenta? Regístrate aquí</a>
+                </div>
+                
+                <hr class="my-3">
+
+                <button id="googleBtn" class="btn btn-danger w-100 d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-google"></i> Entrar con Google
+                </button>
             </div>
-            <button id="loginBtn" class="btn btn-epn w-100">Entrar al Chat</button>
+
+            <!-- Contenedor de Registro -->
+            <div id="register-form-container" style="display: none;">
+                <div class="mb-3 text-start">
+                    <label for="registerNameInput" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="registerNameInput" placeholder="Tu nombre o apodo">
+                </div>
+
+                <div class="mb-3 text-start">
+                    <label for="registerEmailInput" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="registerEmailInput" placeholder="tu@correo.com">
+                </div>
+                
+                <div class="mb-3 text-start">
+                    <label for="registerPasswordInput" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="registerPasswordInput" placeholder="******">
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                    <button id="registerBtn" class="btn btn-epn">Crear Cuenta</button>
+                </div>
+
+                <div class="text-center">
+                    <a href="#" id="showLoginLink" class="text-decoration-none" style="color: var(--primary-color);">¿Ya tienes cuenta? Inicia sesión</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Pantalla de Chat -->
-    <div id="chat-screen">
+    <div id="chat-screen" style="display: none;">
         <!-- Header del Chat -->
         <div class="chat-header">
             <div class="d-flex align-items-center gap-2">
@@ -38,6 +88,11 @@
             </div>
             
             <div class="d-flex align-items-center gap-3">
+                <!-- Botón Logout -->
+                <button id="logoutBtn" class="btn btn-outline-danger btn-sm" title="Cerrar sesión">
+                    <i class="bi bi-box-arrow-right"></i> Salir
+                </button>
+
                 <!-- Estado de conexión -->
                 <span id="status" class="badge bg-secondary">Conectando...</span>
                 
@@ -60,10 +115,10 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle CDN (opcional para interactividad de Bootstrap si fuera necesaria, pero buena práctica) -->
+    <!-- Bootstrap 5 JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmxc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
     <!-- Custom JS -->
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
